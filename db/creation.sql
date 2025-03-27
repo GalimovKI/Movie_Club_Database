@@ -1,11 +1,29 @@
--- Active: 1742168101693@@127.0.0.1@5432@movie_club
--- Create the database
-
+-- Create the schema
 CREATE SCHEMA movie_club;
 
 SET search_path TO movie_club;
 
 CREATE TYPE sex_type AS ENUM ('M', 'F', 'Other');
+
+CREATE OR REPLACE FUNCTION update_movie_rating()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE movie
+    SET rating = (
+        SELECT AVG(assessment)
+        FROM review
+        WHERE movie_id = NEW.movie_id
+    )
+    WHERE movie_id = NEW.movie_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Создаем триггер для автоматического обновления rating
+CREATE TRIGGER update_rating_trigger
+AFTER INSERT OR UPDATE OR DELETE ON review
+FOR EACH ROW
+EXECUTE FUNCTION update_movie_rating();
 
 -- Table: member (with versioning data: valid_from, valid_to)
 CREATE TABLE member (

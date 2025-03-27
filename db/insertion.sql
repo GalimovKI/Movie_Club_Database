@@ -1,23 +1,3 @@
--- Active: 1742168101693@@127.0.0.1@5432@movie_club
-CREATE OR REPLACE FUNCTION update_movie_rating()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE movie
-    SET rating = (
-        SELECT AVG(assessment)
-        FROM review
-        WHERE movie_id = NEW.movie_id
-    )
-    WHERE movie_id = NEW.movie_id;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Создаем триггер для автоматического обновления rating
-CREATE TRIGGER update_rating_trigger
-AFTER INSERT OR UPDATE OR DELETE ON review
-FOR EACH ROW
-EXECUTE FUNCTION update_movie_rating();
 
 INSERT INTO filmmaker (first_name, second_name, birthday, sex, description) VALUES
 ('Christopher', 'Nolan', '1970-07-30', 'M', 'Known for complex narratives and blockbusters.'),
