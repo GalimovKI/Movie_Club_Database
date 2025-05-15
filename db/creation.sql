@@ -5,33 +5,13 @@ SET search_path TO movie_club;
 
 CREATE TYPE sex_type AS ENUM ('M', 'F', 'Other');
 
-CREATE OR REPLACE FUNCTION update_movie_rating()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE movie
-    SET rating = (
-        SELECT AVG(assessment)
-        FROM review
-        WHERE movie_id = NEW.movie_id
-    )
-    WHERE movie_id = NEW.movie_id;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Создаем триггер для автоматического обновления rating
-CREATE TRIGGER update_rating_trigger
-AFTER INSERT OR UPDATE OR DELETE ON review
-FOR EACH ROW
-EXECUTE FUNCTION update_movie_rating();
-
--- Table: member (with versioning data: valid_from, valid_to)
+-- Таблица: member (с версионированием data: valid_from, valid_to)
 CREATE TABLE member (
     member_id SERIAL PRIMARY KEY,
     first_name VARCHAR(200) NOT NULL,
     second_name VARCHAR(200) NOT NULL,
     birthday DATE,
-    sex sex_type NOT NULL, -- Используем созданный тип sex_type
+    sex sex_type NOT NULL,
     valid_from DATE NOT NULL,
     valid_to DATE NOT NULL
 );
@@ -42,7 +22,7 @@ CREATE TABLE filmmaker (
     first_name VARCHAR(200) NOT NULL,
     second_name VARCHAR(200) NOT NULL,
     birthday DATE,
-    sex sex_type NOT NULL, -- Используем созданный тип sex_type
+    sex sex_type NOT NULL,
     description TEXT NOT NULL
 );
 

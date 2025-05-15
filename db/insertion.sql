@@ -118,4 +118,3 @@ INSERT INTO review (member_id, movie_id, comment, assessment) VALUES
 (13, 11, 'Thought-provoking.', 9),
 (14, 12, 'A masterpiece.', 10),
 (15, 13, 'Slow but beautiful.', 8);
-
