@@ -34,7 +34,7 @@ CREATE TABLE movie (
     rating REAL,
     name VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
-    FOREIGN KEY (filmmaker_id) REFERENCES filmmaker(filmmaker_id)
+    FOREIGN KEY (filmmaker_id) REFERENCES filmmaker(filmmaker_id) ON UPDATE CASCADE
 );
 
 -- Таблица: meeting
@@ -49,8 +49,8 @@ CREATE TABLE meeting_registration (
     member_id INTEGER NOT NULL,
     meeting_id INTEGER NOT NULL,
     PRIMARY KEY (member_id, meeting_id),
-    FOREIGN KEY (member_id) REFERENCES member(member_id),
-    FOREIGN KEY (meeting_id) REFERENCES meeting(meeting_id)
+    FOREIGN KEY (member_id) REFERENCES member(member_id) ON UPDATE CASCADE,
+    FOREIGN KEY (meeting_id) REFERENCES meeting(meeting_id) ON UPDATE CASCADE
 );
 
 -- Таблица: movie_discussion
@@ -58,8 +58,8 @@ CREATE TABLE movie_discussion (
     movie_id INTEGER NOT NULL,
     meeting_id INTEGER NOT NULL,
     PRIMARY KEY (movie_id, meeting_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(movie_id),
-    FOREIGN KEY (meeting_id) REFERENCES meeting(meeting_id)
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id) ON UPDATE CASCADE,
+    FOREIGN KEY (meeting_id) REFERENCES meeting(meeting_id) ON UPDATE CASCADE
 );
 
 -- Таблица: review
@@ -69,6 +69,6 @@ CREATE TABLE review (
     movie_id INTEGER NOT NULL,
     comment TEXT,
     assessment INTEGER NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(member_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
+    FOREIGN KEY (member_id) REFERENCES member(member_id) ON UPDATE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id) ON UPDATE CASCADE
 );
